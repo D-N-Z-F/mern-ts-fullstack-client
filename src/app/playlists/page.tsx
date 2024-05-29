@@ -187,7 +187,7 @@ export default function Playlists() {
                     }`}
                   >
                     <img
-                      src={`${process.env.NEXT_PUBLIC_API_URL}/${
+                      src={`https://mern-ts-fullstack-server.onrender.com/${
                         !playlist.songs.length
                           ? "MusicIcon.jpg"
                           : !playlist.songs[0].image

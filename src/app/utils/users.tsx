@@ -15,7 +15,7 @@ export const register = async ({ user, upload }: RegisterUserI) => {
   if (upload) formData.append("image", upload);
 
   const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/register`,
+    `https://mern-ts-fullstack-server.onrender.com/users/register`,
     formData
   );
 
@@ -24,7 +24,7 @@ export const register = async ({ user, upload }: RegisterUserI) => {
 
 export const login = async (user: UserI) => {
   const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/login`,
+    `https://mern-ts-fullstack-server.onrender.com/users/login`,
     user
   );
   return res.data;
@@ -32,7 +32,7 @@ export const login = async (user: UserI) => {
 
 export const getProfile = async () => {
   const res = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/profile`,
+    `https://mern-ts-fullstack-server.onrender.com/users/profile`,
     {
       headers: {
         "x-auth-token": localStorage.getItem("token"),
@@ -51,7 +51,7 @@ export const updateUser = async ({ updatedUser, upload }: UpdateUserI) => {
   if (upload) formData.append("image", upload);
 
   const res = await axios.put(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/${updatedUser._id}`,
+    `https://mern-ts-fullstack-server.onrender.com/users/${updatedUser._id}`,
     formData,
     {
       headers: {
@@ -65,7 +65,7 @@ export const updateUser = async ({ updatedUser, upload }: UpdateUserI) => {
 
 export const verifyUser = async (id: string) => {
   const res = await axios.patch(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/${id}`,
+    `https://mern-ts-fullstack-server.onrender.com/users/${id}`,
     null,
     {
       headers: {
@@ -79,7 +79,7 @@ export const verifyUser = async (id: string) => {
 
 export const upgradeUser = async (id: string) => {
   const res = await axios.patch(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/premium/${id}`,
+    `https://mern-ts-fullstack-server.onrender.com/users/premium/${id}`,
     null,
     {
       headers: {
@@ -93,7 +93,7 @@ export const upgradeUser = async (id: string) => {
 
 export const deleteUser = async (id: string) => {
   const res = await axios.delete(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/${id}`,
+    `https://mern-ts-fullstack-server.onrender.com/users/${id}`,
     {
       headers: {
         "x-auth-token": localStorage.getItem("token"),

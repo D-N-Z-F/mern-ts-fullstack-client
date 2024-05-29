@@ -156,7 +156,7 @@ export default function AudioPlayer({
         />
         <audio
           ref={audioRef}
-          src={`${process.env.NEXT_PUBLIC_API_URL}/${song.song}`}
+          src={`https://mern-ts-fullstack-server.onrender.com/${song.song}`}
         ></audio>
       </div>
       <div className="w-full h-1/3 flex justify-center items-center">

@@ -251,7 +251,7 @@ export default function LoginRegister() {
                     }}
                     type="icon"
                     theme="filled_black"
-                    login_uri="${process.env.NEXT_PUBLIC_API_URL}/login"
+                    login_uri="https://mern-ts-fullstack-server.onrender.com/login"
                   />
                 </button>
               </div>

@@ -2,13 +2,17 @@ import { AddSongI, SongI, UpdateSongI } from "@/interfaces_and_types/SongI";
 import axios from "axios";
 
 export const getSongs = async () => {
-  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/songs`);
+  const res = await axios.get(
+    `https://mern-ts-fullstack-server.onrender.com/songs`
+  );
 
   return res.data;
 };
 
 export const getSong = async (id: string) => {
-  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/songs/${id}`);
+  const res = await axios.get(
+    `https://mern-ts-fullstack-server.onrender.com/songs/${id}`
+  );
 
   return res.data;
 };
@@ -26,7 +30,7 @@ export const addSong = async ({
   if (imageUpload) formData.append("image", imageUpload);
 
   const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_API_URL}/songs/`,
+    `https://mern-ts-fullstack-server.onrender.com/songs/`,
     formData,
     {
       headers: {
@@ -50,7 +54,7 @@ export const editSong = async ({
   if (imageUpload) formData.append("image", imageUpload);
 
   const res = await axios.put(
-    `${process.env.NEXT_PUBLIC_API_URL}/songs/${updatedSong._id}`,
+    `https://mern-ts-fullstack-server.onrender.com/songs/${updatedSong._id}`,
     formData,
     {
       headers: {
@@ -64,7 +68,7 @@ export const editSong = async ({
 
 export const deleteSong = async (id: string) => {
   const res = await axios.delete(
-    `${process.env.NEXT_PUBLIC_API_URL}/songs/${id}`,
+    `https://mern-ts-fullstack-server.onrender.com/songs/${id}`,
     {
       headers: {
         "x-auth-token": localStorage.getItem("token"),

@@ -1,18 +1,21 @@
 import axios from "axios";
 
 export const getLiked = async () => {
-  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/likes/`, {
-    headers: {
-      "x-auth-token": localStorage.getItem("token"),
-    },
-  });
+  const res = await axios.get(
+    `https://mern-ts-fullstack-server.onrender.com/likes/`,
+    {
+      headers: {
+        "x-auth-token": localStorage.getItem("token"),
+      },
+    }
+  );
 
   return res.data;
 };
 
 export const likeUnlike = async (id: string) => {
   const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_API_URL}/likes/${id}`,
+    `https://mern-ts-fullstack-server.onrender.com/likes/${id}`,
     null,
     {
       headers: {
