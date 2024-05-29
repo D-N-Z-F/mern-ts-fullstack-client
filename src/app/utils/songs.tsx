@@ -2,13 +2,13 @@ import { AddSongI, SongI, UpdateSongI } from "@/interfaces_and_types/SongI";
 import axios from "axios";
 
 export const getSongs = async () => {
-  const res = await axios.get("http://localhost:8000/songs");
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/songs`);
 
   return res.data;
 };
 
 export const getSong = async (id: string) => {
-  const res = await axios.get(`http://localhost:8000/songs/${id}`);
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/songs/${id}`);
 
   return res.data;
 };
@@ -25,11 +25,15 @@ export const addSong = async ({
   if (audioUpload) formData.append("song", audioUpload);
   if (imageUpload) formData.append("image", imageUpload);
 
-  const res = await axios.post(`http://localhost:8000/songs/`, formData, {
-    headers: {
-      "x-auth-token": localStorage.getItem("token"),
-    },
-  });
+  const res = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_URL}/songs/`,
+    formData,
+    {
+      headers: {
+        "x-auth-token": localStorage.getItem("token"),
+      },
+    }
+  );
 
   return res.data;
 };
@@ -46,7 +50,7 @@ export const editSong = async ({
   if (imageUpload) formData.append("image", imageUpload);
 
   const res = await axios.put(
-    `http://localhost:8000/songs/${updatedSong._id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/songs/${updatedSong._id}`,
     formData,
     {
       headers: {
@@ -59,11 +63,14 @@ export const editSong = async ({
 };
 
 export const deleteSong = async (id: string) => {
-  const res = await axios.delete(`http://localhost:8000/songs/${id}`, {
-    headers: {
-      "x-auth-token": localStorage.getItem("token"),
-    },
-  });
+  const res = await axios.delete(
+    `${process.env.NEXT_PUBLIC_API_URL}/songs/${id}`,
+    {
+      headers: {
+        "x-auth-token": localStorage.getItem("token"),
+      },
+    }
+  );
 
   return res.data;
 };

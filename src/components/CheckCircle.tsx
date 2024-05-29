@@ -10,7 +10,7 @@ export default function CheckCircle({ playlistSongs, id }: CheckCircleProps) {
   useEffect(() => {
     setSongId(id);
     setIsInPlaylist(playlistSongs.some((song) => song._id === songId));
-  }, [id, playlistSongs]);
+  }, [id, playlistSongs, songId]);
 
   return (
     <>

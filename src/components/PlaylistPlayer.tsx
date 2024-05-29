@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { PlaylistPlayerProps } from "@/interfaces_and_types/PlaylistI";
 import {
   MinusCircleIcon,
@@ -25,21 +25,21 @@ export default function PlaylistPlayer({
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [index, setIndex] = useState(0);
 
-  const getSeconds = () => {
+  const getSeconds = useCallback(() => {
     const minutes = parseInt(songs[index].duration[0]);
     const seconds = parseInt(
       songs[index].duration.slice(songs[index].duration.length - 2)
     );
 
     return minutes * 60 + seconds;
-  };
+  }, [index, songs]);
 
-  const updateProgressBar = () => {
+  const updateProgressBar = useCallback(() => {
     const seconds = Math.round(audioRef.current?.currentTime as number);
     const duration = getSeconds();
     const percentage = (seconds / duration) * 100;
     setProgress(percentage);
-  };
+  }, [getSeconds]);
 
   const updateTime = () => {
     const currentTime = Math.round(audioRef.current?.currentTime as number);
@@ -95,7 +95,14 @@ export default function PlaylistPlayer({
     if (isPlaying) startInterval();
 
     return () => clearInterval(intervalRef.current as NodeJS.Timeout);
-  }, [isPlaying, setIsPlaying]);
+  }, [
+    isPlaying,
+    setIsPlaying,
+    getSeconds,
+    index,
+    songs.length,
+    updateProgressBar,
+  ]);
 
   useEffect(() => {
     setIsPlaying(false);
@@ -151,7 +158,7 @@ export default function PlaylistPlayer({
         />
         <audio
           ref={audioRef}
-          src={`http://localhost:8000/${songs[index].song}`}
+          src={`${process.env.NEXT_PUBLIC_API_URL}/${songs[index].song}`}
         ></audio>
       </div>
       <div className="w-full h-1/3 flex justify-center items-center">

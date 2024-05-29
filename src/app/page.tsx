@@ -42,6 +42,7 @@ import {
 } from "./utils/playlists";
 import { PlaylistI } from "@/interfaces_and_types/PlaylistI";
 import CheckCircle from "@/components/CheckCircle";
+import Image from "next/image";
 
 export default function Home() {
   const { user, token, setUser, setToken } = useContext(AuthContext);
@@ -269,7 +270,7 @@ export default function Home() {
       setToken(null);
       permanentRedirect("/login");
     } else permanentRedirect("/login");
-  }, [user, token]);
+  }, [user, token, setToken, setUser]);
 
   return (
     <>
@@ -281,52 +282,60 @@ export default function Home() {
                 <h1 className="w-full pl-2 text-2xl font-bold">
                   Featured Songs
                 </h1>
-                {songsData.map((song: SongI) => (
-                  <div
-                    key={song._id}
-                    onClick={() => playAudio(song)}
-                    className="relative w-full sm:w-1/2 md:w-1/3 h-1/3 p-2 lg:hover:transform lg:hover:scale-105 lg:hover:z-5 transition duration-100 ease-in-out cursor-pointer"
-                  >
-                    <img
-                      src={`http://localhost:8000/${
-                        !song.image ? "MusicIcon.jpg" : song.image
-                      }`}
-                      alt={!song.image ? "SongImage" : song.image.slice(14)}
-                      className="w-full h-full object-cover brightness-50 rounded-md"
-                    />
-                    <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between">
-                      <div className="w-full h-1/2 flex justify-end items-start p-4">
-                        <PlusCircleIcon
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSongToAddOrRemove(song._id as string);
-                            setIsAddingToPlaylist(true);
-                          }}
-                          className="w-6 h-6 text-red-500 mr-2 hover:transform hover:scale-125 hover:shadow-black hover:shadow hover:bg-gray-500 hover:z-10 rounded-md transition duration-100 ease-in-out cursor-pointer"
+                {!songsData || !songsData.length
+                  ? null
+                  : songsData.map((song: SongI) => (
+                      <div
+                        key={song._id}
+                        onClick={() => playAudio(song)}
+                        className="relative w-full sm:w-1/2 md:w-1/3 h-1/3 p-2 lg:hover:transform lg:hover:scale-105 lg:hover:z-5 transition duration-100 ease-in-out cursor-pointer"
+                      >
+                        <Image
+                          src={`${process.env.NEXT_PUBLIC_API_URL}/${
+                            !song.image ? "MusicIcon.jpg" : song.image
+                          }`}
+                          alt={!song.image ? "SongImage" : song.image.slice(14)}
+                          className="w-full h-full object-cover brightness-50 rounded-md"
                         />
-                        <LikeUnlike song={song} liked={likedData} />
-                        {!user?.isAdmin ? null : (
-                          <button
-                            id={song._id}
-                            onClick={triggerEdit}
-                            className="hover:transform hover:scale-125 hover:shadow-black hover:shadow hover:bg-gray-500 hover:z-10 rounded-md transition duration-100 ease-in-out cursor-pointer pointer-events-auto"
-                          >
-                            <Cog8ToothIcon className="w-6 h-6" />
-                          </button>
-                        )}
-                      </div>
-                      <div className="w-full h-1/2 flex justify-between items-end p-4">
-                        <div>
-                          <h1 className="text-xl text-white">{song.name}</h1>
-                          <p className="text-sm text-white">{song.artist}</p>
+                        <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between">
+                          <div className="w-full h-1/2 flex justify-end items-start p-4">
+                            <PlusCircleIcon
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSongToAddOrRemove(song._id as string);
+                                setIsAddingToPlaylist(true);
+                              }}
+                              className="w-6 h-6 text-red-500 mr-2 hover:transform hover:scale-125 hover:shadow-black hover:shadow hover:bg-gray-500 hover:z-10 rounded-md transition duration-100 ease-in-out cursor-pointer"
+                            />
+                            <LikeUnlike song={song} liked={likedData} />
+                            {!user?.isAdmin ? null : (
+                              <button
+                                id={song._id}
+                                onClick={triggerEdit}
+                                className="hover:transform hover:scale-125 hover:shadow-black hover:shadow hover:bg-gray-500 hover:z-10 rounded-md transition duration-100 ease-in-out cursor-pointer pointer-events-auto"
+                              >
+                                <Cog8ToothIcon className="w-6 h-6" />
+                              </button>
+                            )}
+                          </div>
+                          <div className="w-full h-1/2 flex justify-between items-end p-4">
+                            <div>
+                              <h1 className="text-xl text-white">
+                                {song.name}
+                              </h1>
+                              <p className="text-sm text-white">
+                                {song.artist}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-white">
+                                {song.duration}
+                              </p>
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm text-white">{song.duration}</p>
-                        </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
+                    ))}
                 {!user?.isAdmin ? null : (
                   <div className="w-full sm:w-1/2 md:w-1/3 h-1/3 p-2">
                     <button
@@ -345,7 +354,7 @@ export default function Home() {
                 )}
               </div>
             </div>
-            {!activePlayer ? null : (
+            {!activePlayer ? null : !activeSong ? null : (
               <AudioPlayer
                 song={activeSong}
                 activePlayer={activePlayer}
@@ -492,7 +501,11 @@ export default function Home() {
           </div>
           <div className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 h-2/3 bg-gray-800 rounded-lg p-4">
             <h1 className="text-2xl font-bold">Your Playlists</h1>
-            {playlistData.length ? (
+            {!playlistData || !playlistData.length ? (
+              <div className="w-full h-5/6 flex justify-center items-center">
+                <h1 className="animate-bounce">No Playlists Found...</h1>
+              </div>
+            ) : (
               <div className="w-full h-5/6 pt-2 overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-transparent">
                 {playlistData.map((playlist: PlaylistI, i: number) => (
                   <div
@@ -501,8 +514,8 @@ export default function Home() {
                     onClick={triggerAddOrRemove}
                     className="w-full h-1/3 flex hover:transform hover:scale-90 hover:z-5 transition duration-100 ease-in-out cursor-pointer rounded-md"
                   >
-                    <img
-                      src={`http://localhost:8000/${
+                    <Image
+                      src={`${process.env.NEXT_PUBLIC_API_URL}/${
                         playlist.songs.length
                           ? playlist.songs[0].image
                             ? playlist.songs[0].image
@@ -538,10 +551,6 @@ export default function Home() {
                     </div>
                   </div>
                 ))}
-              </div>
-            ) : (
-              <div className="w-full h-5/6 flex justify-center items-center">
-                <h1 className="animate-bounce">No Playlists Found...</h1>
               </div>
             )}
           </div>

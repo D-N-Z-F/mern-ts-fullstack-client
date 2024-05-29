@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const getLiked = async () => {
-  const res = await axios.get("http://localhost:8000/likes/", {
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/likes/`, {
     headers: {
       "x-auth-token": localStorage.getItem("token"),
     },
@@ -11,11 +11,15 @@ export const getLiked = async () => {
 };
 
 export const likeUnlike = async (id: string) => {
-  const res = await axios.post(`http://localhost:8000/likes/${id}`, null, {
-    headers: {
-      "x-auth-token": localStorage.getItem("token"),
-    },
-  });
+  const res = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_URL}/likes/${id}`,
+    null,
+    {
+      headers: {
+        "x-auth-token": localStorage.getItem("token"),
+      },
+    }
+  );
 
   return res.data;
 };

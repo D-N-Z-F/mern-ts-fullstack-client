@@ -18,6 +18,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getLiked } from "@/app/utils/likes";
 import { SongI } from "@/interfaces_and_types/SongI";
+import Image from "next/image";
 
 export default function SideNav() {
   const { user, token, setUser, setToken } = useContext(AuthContext);
@@ -124,9 +125,10 @@ export default function SideNav() {
             <>
               <div className="w-full h-full flex flex-wrap justify-between rounded-md hidden md:block">
                 <div className="relative h-1/3 w-full rounded-tl-md rounded-tr-md">
-                  <img
-                    src={`http://localhost:8000/${user?.image}`}
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_API_URL}/${user?.image}`}
                     className="h-full w-full object-cover rounded-tl-md rounded-tr-md brightness-50"
+                    alt="userIcon"
                   />
                   <div className="absolute top-0 left-0 w-full h-full p-2 flex justify-between items-end">
                     <div className="text-white">
@@ -176,11 +178,12 @@ export default function SideNav() {
                       </div>
                     ) : (
                       <>
-                        <img
-                          src={`http://localhost:8000/${
+                        <Image
+                          src={`${process.env.NEXT_PUBLIC_API_URL}/${
                             !likedSong.image ? "MusicIcon.jpg" : likedSong.image
                           }`}
                           className="w-full h-full object-cover brightness-50 rounded-md"
+                          alt="likedSongImage"
                         />
                         <div className="absolute top-0 left-0 w-full h-full p-2 flex flex-col justify-end text-white">
                           <h1>{likedSong.name}</h1>

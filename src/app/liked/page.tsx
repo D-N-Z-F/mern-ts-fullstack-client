@@ -33,6 +33,7 @@ import AudioPlayer from "@/components/AudioPlayer";
 import { PlaylistI } from "@/interfaces_and_types/PlaylistI";
 import CheckCircle from "@/components/CheckCircle";
 import { permanentRedirect } from "next/navigation";
+import Image from "next/image";
 
 export default function LikedPage() {
   const { user } = useContext(AuthContext);
@@ -236,22 +237,22 @@ export default function LikedPage() {
             <div className="w-full h-full bg-gray-900 rounded-md p-2 overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
               <div className="w-full h-full p-2 flex flex-wrap content-start">
                 <h1 className="w-full pl-2 text-2xl font-bold">Liked Songs</h1>
-                {!likedData.songs ? (
+                {!likedData || !likedData.songs || !likedData.songs.length ? (
                   <div className="w-full h-1/2 flex justify-center items-center">
                     <div className="animate-bounce">
                       <h1 className="text-2xl">Nothing To Show Yet!</h1>
                       <h2 className="text-md">Start Liking Songs!</h2>
                     </div>
                   </div>
-                ) : likedData.songs.length ? (
+                ) : (
                   likedData.songs.map((song: SongI) => (
                     <div
                       key={song._id}
                       onClick={() => playAudio(song)}
                       className="relative w-full sm:w-1/2 md:w-1/3 h-1/3 p-2 hover:transform hover:scale-105 hover:z-5 transition duration-100 ease-in-out cursor-pointer"
                     >
-                      <img
-                        src={`http://localhost:8000/${
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_API_URL}/${
                           !song.image ? "MusicIcon.jpg" : song.image
                         }`}
                         alt={!song.image ? "SongImage" : song.image.slice(14)}
@@ -302,23 +303,16 @@ export default function LikedPage() {
                       </div>
                     </div>
                   ))
-                ) : (
-                  <div className="w-full h-1/2 flex justify-center items-center">
-                    <div className="animate-bounce">
-                      <h1 className="text-2xl">Nothing To Show Yet!</h1>
-                      <h2 className="text-md">Start Liking Songs!</h2>
-                    </div>
-                  </div>
                 )}
               </div>
             </div>
-            {!activePlayer ? null : (
+            {!activePlayer ? null : !activeSong ? null : (
               <AudioPlayer
                 song={activeSong}
                 activePlayer={activePlayer}
                 setActivePlayer={setActivePlayer}
                 setActiveSong={setActiveSong}
-                songData={likedData.songs}
+                songData={likedData.song}
               />
             )}
           </>
@@ -431,7 +425,11 @@ export default function LikedPage() {
           </div>
           <div className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 h-4/5 bg-gray-800 rounded-lg p-4">
             <h1 className="text-2xl font-bold">Your Playlists</h1>
-            {playlistData.length ? (
+            {!playlistData || !playlistData.length ? (
+              <div className="w-full h-5/6 flex justify-center items-center">
+                <h1 className="animate-bounce">No Playlists Found...</h1>
+              </div>
+            ) : (
               <div className="w-full h-5/6 pt-2 overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-transparent">
                 {playlistData.map((playlist: PlaylistI, i: number) => (
                   <div
@@ -440,8 +438,8 @@ export default function LikedPage() {
                     onClick={triggerAddOrRemove}
                     className="w-full h-1/3 flex hover:transform hover:scale-90 hover:z-5 transition duration-100 ease-in-out cursor-pointer rounded-md"
                   >
-                    <img
-                      src={`http://localhost:8000/${
+                    <Image
+                      src={`${process.env.NEXT_PUBLIC_API_URL}/${
                         playlist.songs.length
                           ? playlist.songs[0].image
                             ? playlist.songs[0].image
@@ -477,10 +475,6 @@ export default function LikedPage() {
                     </div>
                   </div>
                 ))}
-              </div>
-            ) : (
-              <div className="w-full h-5/6 flex justify-center items-center">
-                <h1 className="animate-bounce">No Playlists Found...</h1>
               </div>
             )}
           </div>

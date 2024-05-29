@@ -10,7 +10,7 @@ export interface SongI {
 }
 
 export interface AudioPlayerProps {
-  song: SongI | null;
+  song: SongI;
   activePlayer: boolean;
   setActivePlayer: React.Dispatch<React.SetStateAction<boolean>>;
   setActiveSong: React.Dispatch<React.SetStateAction<SongI | null>>;

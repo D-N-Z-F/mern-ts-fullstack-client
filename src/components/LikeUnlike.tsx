@@ -46,7 +46,7 @@ export default function LikeUnlike({ song, liked }: LikeUnlikeI) {
       for (let i = 0; i < likedSongs.length; i++)
         if (liked.songs[i]._id === song._id) setIsLiked(true);
     }
-  }, []);
+  }, [liked.songs, liked.status, song._id]);
 
   const styles = {
     button:
