@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["mern-ts-fullstack-server.onrender.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "mern-ts-fullstack-server.onrender.com",
+      },
+    ],
   },
 };
 
