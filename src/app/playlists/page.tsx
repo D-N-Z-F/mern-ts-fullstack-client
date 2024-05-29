@@ -31,7 +31,6 @@ import { SongI } from "@/interfaces_and_types/SongI";
 import PlaylistPlayer from "@/components/PlaylistPlayer";
 import { toast } from "react-toastify";
 import { permanentRedirect } from "next/navigation";
-import Image from "next/image";
 
 export default function Playlists() {
   const { user, token, setUser, setToken } = useContext(AuthContext);
@@ -187,7 +186,7 @@ export default function Playlists() {
                         : "hover:transform hover:scale-105 hover:z-5"
                     }`}
                   >
-                    <Image
+                    <img
                       src={`${process.env.NEXT_PUBLIC_API_URL}/${
                         !playlist.songs.length
                           ? "MusicIcon.jpg"
